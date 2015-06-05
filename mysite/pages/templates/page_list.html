@@ -1,0 +1,51 @@
+{# stores/templates/page_list.html #}
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-1">
+            photo
+        </div>
+        <div class="col-xs-3">
+            name
+        </div>
+        <div class="col-xs-2">
+            like
+        </div>
+        <div class="col-xs-2">
+            last like
+        </div>
+        <div class="col-xs-2">
+            last access time
+        </div>
+        <div class="col-xs-2">
+            notes
+        </div>
+    </div>
+    {% for page_item in page_items %}
+    <div class="row">
+        <div class="col-xs-1">
+            photo
+        </div>
+        <div class="col-xs-3">
+            {{ page_item.name }}
+        </div>
+        <div class="col-xs-2">
+            like
+        </div>
+        <div class="col-xs-2">
+            {{ page_item.last_like_count }}
+        </div>
+        <div class="col-xs-2">
+            {{ page_item.last_access_time }}
+        </div>
+        <div class="col-xs-2">
+            {{ page_item.notes|truncatechars:30 }}
+        </div>
+    </div>
+    {% endfor %}
+    <div>
+        {{ text }}
+    </div>
+</div>
+{% endblock %}

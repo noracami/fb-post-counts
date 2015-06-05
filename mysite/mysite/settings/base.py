@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'ROC'
 
 USE_I18N = True
 
