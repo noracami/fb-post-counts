@@ -12,6 +12,12 @@ http://goo.gl/forms/AG8OPFYwcX
 https://spreadsheets.google.com/feeds/list/1bbLsXmt5ckL2pLOhZESWdQmhqfXbvHMlzO53U04z5Ao/default/public/values?alt=json
 
 ``` bash
+# Mac$
+python3 -m venv myvenv
+```
+
+``` bash
+# ubuntu$
 pyvenv-3.4 --without-pip myvenv
 source ./myvenv/bin/activate
 wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz
