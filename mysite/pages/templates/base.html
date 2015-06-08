@@ -13,7 +13,8 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'home' %}">Facebook Page Counts</a>
                 </div>
-                <a href="{% url 'page_list' %}" type="button" class="btn btn-success navbar-btn navbar-right">新增案件</a>
+                <a href="{% url 'admin:index' %}" type="button" class="btn btn-info navbar-btn navbar-left">/admin</a>
+                <a href="{% url 'page_list' %}" type="button" class="btn btn-success navbar-btn navbar-left">新增案件</a>
             </div>
         </nav>
         {% block content %}
