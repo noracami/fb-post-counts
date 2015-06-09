@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 import datetime
 import json
+import time
 import urllib.request
 from .models import PageItem
 
@@ -29,12 +30,14 @@ def page_list(request):
                 'https://graph.facebook.com/',
                 page_item.fb_id,
             )
+            print(request_link)
+            #time.sleep(5)
             result = ''
-            result = json.loads(urllib.request.urlopen(request_link).read().decode('utf-8'))
+            #result = json.loads(urllib.request.urlopen(request_link).read().decode('utf-8'))
             text[len(text):] = [{
                 'name': page_item.name,
                 'is_recently_count': page_item.last_access_time > timezone.now() - datetime.timedelta(days=1),
-                'notes': result['likes'],
+                #'notes': result['likes'],
                 'request_link': request_link,
             }]
     return render(request, 'page_list.html',

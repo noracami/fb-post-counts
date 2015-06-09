@@ -4,16 +4,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-1">
-            photo
+            &nbsp;
         </div>
         <div class="col-xs-3">
-            name
+            FB 粉絲專頁名稱
         </div>
         <div class="col-xs-2">
-            like
-        </div>
-        <div class="col-xs-2">
-            last like
+            粉絲數
         </div>
         <div class="col-xs-2">
             last access time
@@ -25,16 +22,13 @@
     {% for page_item in page_items %}
     <div class="row">
         <div class="col-xs-1">
-            photo
+            <img src="{{ page_item.picture_url }}" alt="">
         </div>
         <div class="col-xs-3">
-            {{ page_item.name }}
+            <a href="https://www.facebook.com/{{ page_item.fb_id }}" target="_blank" style="color: #3b5998;font-weight: bold;">{{ page_item.name }}</a>
         </div>
         <div class="col-xs-2">
             like
-        </div>
-        <div class="col-xs-2">
-            {{ page_item.last_like_count }}
         </div>
         <div class="col-xs-2">
             {{ page_item.last_access_time }}

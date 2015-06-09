@@ -23,6 +23,7 @@ class PageItem(models.Model):
     add_time = models.DateTimeField("加入時間", auto_now_add=True, editable=False)
     last_access_time = models.DateTimeField("上次存取時間")
     last_like_count = models.IntegerField("上次粉絲人數")
+    picture_url = models.CharField("大頭貼", max_length=250)
     notes = models.TextField("備註", blank=True, default="")
 
     def __str__(self):
