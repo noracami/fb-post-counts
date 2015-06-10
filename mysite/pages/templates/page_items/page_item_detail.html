@@ -1,0 +1,18 @@
+{# stores/templates/page_list.html #}
+{% extends "base.html" %}
+{% block title %}{{ page_item.name }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ page_item.name }}</h1>
+    <p>{{ page_item.notes }}</p>
+    <table class="table">
+        <thead>
+            <tr><th>品項</th><th>單價</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>{{ page_item.name }}</td><td>{{ page_item.last_like_count }}</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

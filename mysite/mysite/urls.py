@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from pages.views import home, page_list
+from pages.views import home, page_list, page_item_detail, page_item_create, page_item_update
 
 urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^page/$', page_list, name='page_list'),
+    url(r'^page/(?P<pk>\d+)/$', page_item_detail, name='page_item_detail'),
+    url(r'^page/new/$', page_item_create, name='page_item_create'),
+    url(r'^page/(?P<pk>\d+)/update/$', page_item_update, name='page_item_update'),
     url(r'^admin/', include(admin.site.urls)),
 ]

@@ -1,0 +1,11 @@
+{# stores/templates/page_list.html #}
+{% extends "base.html" %}
+{% block title %}加入 FB 粉絲專頁 | {{ block.super }}{% endblock title %}
+
+{% block content %}
+<form action="" method="post" role="form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">加入</button>
+</form>
+{% endblock content %}

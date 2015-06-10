@@ -3,28 +3,35 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Facebook Page Counts</title>
+        <title>{% block title %}Facebook Page Counts{% endblock title %}</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     </head>
 
-    <body>
-        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <body style="padding-top: 70px;">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'home' %}">Facebook Page Counts</a>
                 </div>
                 <a href="{% url 'admin:index' %}" type="button" class="btn btn-info navbar-btn navbar-right">/admin</a>
-                <a href="{% url 'page_list' %}" type="button" class="btn btn-success navbar-btn navbar-left">新增案件</a>
                 <div>
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="">加入 FB 粉絲專頁</a></li>
-                        <li><a href="">加入 FB 動態</a></li>
-                        <li><a href="">加入新聞</a></li>
+                        <li class="active"><a href="{% url 'page_list' %}">FB 粉絲專頁</a></li>
+                        <li class="disabled"><a href="">熱門 FB 動態</a></li>
+                        <li class="disabled"><a href="">熱門新聞</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
+        <div class="container-fluid" style="width: 1150px;margin-right: auto; margin-left: auto;">
         {% block content %}
         {% endblock %}
+        </div>
+        <div class="container-fluid" style="width: 1150px;margin-right: auto; margin-left: auto;">
+        {% block footer %}
+        <hr>
+        <h2 class="text-center">Footer</h2>
+        {% endblock %}
+        </div>
     </body>
 </html>

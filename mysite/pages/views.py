@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.forms.models import modelform_factory
+from django.http import Http404
+from django.shortcuts import redirect, render
 from django.utils import timezone
 import datetime
 import json
@@ -40,5 +42,40 @@ def page_list(request):
                 #'notes': result['likes'],
                 'request_link': request_link,
             }]
-    return render(request, 'page_list.html',
+    return render(request, 'page_items/page_list.html',
         {'page_items': page_items, 'text': text})
+
+def page_item_detail(request, pk):
+    try:
+        page_item = PageItem.objects.get(pk=pk)
+    except PageItem.DoesNotExist:
+        raise Http404
+    return render(request, 'page_items/page_item_detail.html', {'page_item': page_item})
+
+def page_item_create(request):
+    PageItemForm = modelform_factory(PageItem, fields=('user', 'name', 'fb_id', 'last_access_time', 'last_like_count', 'picture_url', 'notes',))
+    if request.method == 'POST':
+        form = PageItemForm(request.POST)
+        if form.is_valid():
+            page_item = form.save()
+            return redirect(page_item.get_absolute_url())
+    else:
+        form = PageItemForm()
+    return render(request, 'page_items/page_item_create.html', {'form': form})
+
+def page_item_update(request, pk):
+    try:
+        page_item = PageItem.objects.get(pk=pk)
+    except PageItem.DoesNotExist:
+        raise Http404
+    PageItemForm = modelform_factory(PageItem, fields=('user', 'name', 'fb_id', 'last_access_time', 'last_like_count', 'picture_url', 'notes',))
+    if request.method == 'POST':
+        form = PageItemForm(request.POST, instance=PageItem)
+        if form.is_valid():
+            page_item = form.save()
+            return redirect(page_item.get_absolute_url())
+    else:
+        form = PageItemForm(instance=page_item)
+    return render(request, 'page_items/page_item_update.html', {
+        'form': form, 'page_item': page_item,
+    })
