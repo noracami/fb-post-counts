@@ -1,2 +1,4 @@
 Django==1.8.2
-django-toolbelt
+dj-static==0.0.6
+django-crispy-forms-ng==2.0.0
+static3==0.6.1

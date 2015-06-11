@@ -1,5 +1,6 @@
 {# stores/templates/page_list.html #}
 {% extends "base.html" %}
+{% load pages_tags %}
 {% block title %}{{ page_item.name }} | {{ block.super }}{% endblock title %}
 
 {% block content %}
@@ -14,5 +15,13 @@
             <tr><td>{{ page_item.name }}</td><td>{{ page_item.last_like_count }}</td></tr>
         </tbody>
     </table>
+</div>
+<div class="container">
+    <form method="post" action="{% url 'page_item_delete' page_item.pk %}">
+        {% csrf_token %}
+        {% if page_item|deletable:user %}
+        <button type="submit" class="btn btn-danger">刪除</button>
+        {% endif %}
+    </form>
 </div>
 {% endblock content %}

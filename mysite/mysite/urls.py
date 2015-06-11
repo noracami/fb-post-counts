@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from pages.views import home, page_list, page_item_detail, page_item_create, page_item_update
+from pages.views import home, page_list, page_item_detail, page_item_create, page_item_update, page_item_delete, page_item_refresh
 
 urlpatterns = [
     url(r'^$', home, name='home'),
@@ -23,5 +23,8 @@ urlpatterns = [
     url(r'^page/(?P<pk>\d+)/$', page_item_detail, name='page_item_detail'),
     url(r'^page/new/$', page_item_create, name='page_item_create'),
     url(r'^page/(?P<pk>\d+)/update/$', page_item_update, name='page_item_update'),
+    url(r'^page/(?P<pk>\d+)/delete/$', page_item_delete, name='page_item_delete'),
+    url(r'^page/(?P<pk>\d+)/refresh/$', page_item_refresh, name='page_item_refresh'),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]

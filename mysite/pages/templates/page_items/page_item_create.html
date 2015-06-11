@@ -1,11 +1,51 @@
-{# stores/templates/page_list.html #}
+{# pages/templates/page_list.html #}
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block title %}加入 FB 粉絲專頁 | {{ block.super }}{% endblock title %}
 
+{% block content_width %}700{% endblock %}
 {% block content %}
-<form action="" method="post" role="form">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">加入</button>
-</form>
+{% crispy form %}
 {% endblock content %}
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $("#id_creator option").first().remove();
+        $("#id_name").attr("readonly", "readonly");
+        $("#id_last_like_count").attr("readonly", "readonly");
+        $("#id_picture_url").attr("readonly", "readonly");
+        $("#div_id_creator").hide();
+    });
+    var ss = 'asd';
+    var n = {};
+    var hnd;
+    $("#id_fb_id").change(function() {
+        console.log(ss);
+        //
+        window.clearTimeout(hnd);
+        var value = $("#id_fb_id").val();
+        hnd = window.setTimeout(function () {
+            if(value){
+                ss = 'https://graph.facebook.com/' + value + '?fields=name,likes,picture';
+                $.getJSON(ss, function(data) {
+                    n['picture'] = data.picture.data.url;
+                    //console.log(data.picture.data.url);
+                    //console.log(data.likes);
+                    n['likes'] = data.likes;
+                    n['name'] = data.name;
+                    //console.log(data.name);
+                });
+            }
+        }, 1000);
+        //window.clearTimeout(hnd);
+        window.setTimeout(function () {
+            $("#id_name").val(n['name']);
+            $("#id_last_like_count").val(n['likes']);
+            $("#id_picture_url").val(n['picture']);
+            console.log(n['likes']);
+            window.setTimeout(function() {console.log("!!!!");}, 1000);
+        }, 2500);
+    });
+</script>
+{% endblock js %}

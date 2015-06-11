@@ -1,5 +1,7 @@
-{# stores/templates/page_list.html #}
+{# pages/templates/page_items/page_list.html #}
 {% extends "base.html" %}
+{% load staticfiles %}
+{% load pages_tags %}
 {% block content %}
 <div class="container-fluid" style="float: left; width: 80%;">
     <table class="table">
@@ -7,14 +9,27 @@
             <tr><th>&nbsp;</th><th>FB 粉絲專頁名稱</th><th>粉絲數</th><th>&nbsp;</th></tr>
         </thead>
         <tbody>
-            {% for page_item in page_items %}
+            {% for e in text %}
             <tr>
-                <td class="text-center"><img src="{{ page_item.picture_url }}" alt=""></td>
-                <td style="vertical-align: middle;"><a href="https://www.facebook.com/{{ page_item.fb_id }}" target="_blank" style="color: #3b5998;font-weight: bold;">{{ page_item.name }}</a></td>
-                <td style="vertical-align: middle;">{{ page_item.last_like_count }}</td>
+                <td class="text-center"><img src="{{ e.page_item.picture_url }}" alt=""></td>
+                <td style="vertical-align: middle;"><a href="https://www.facebook.com/{{ e.page_item.fb_id }}" target="_blank" style="color: #3b5998;font-weight: bold;">{{ e.page_item.name }}</a></td>
+                <td style="vertical-align: middle;">{{ e.page_item.last_like_count }}</td>
                 <td style="vertical-align: middle;">
-                    <a href="{{ page_item.get_absolute_url }}" type="button" class="btn btn-default">更多&nbsp;<span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></a>
-                    <a href="/page/{{ page_item.pk }}/update/" type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                    <a style="display:none;" href="{{ e.page_item.get_absolute_url }}" type="button" class="btn btn-default">更多&nbsp;<span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></a>
+                    <a style="display:none;" href="/page/{{ e.page_item.pk }}/update/" type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                    {% if e.page_item|deletable:user %}
+                    <button data-href="{% url 'page_item_delete' e.page_item.pk %}"
+                            class="btn btn-danger pull-right btn-delete">
+                        刪除
+                    </button>
+                    {% endif %}
+                    {% if e.is_recently_count %}
+                    {% else %}
+                    <button data-href="{% url 'page_item_refresh' e.page_item.pk %}"
+                            class="btn btn-info btn-refresh">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    </button>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -24,8 +39,10 @@
 <div class="container-fluid" style="float: left; width: 20%;">
     <a href="{% url 'page_item_create' %}" type="button"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFS0lEQVR4Xu2bXXIaRxCAu3dTRlWxgJwg8gmMTiD5BMEPCfhJEPCz0AminMD4ORDQkyF5sG5gOIHgBOYGYcGpEintdGqGH/Ozy8zs7rCbSFvFE7Mz3V/3zvT09CCYflr57DGlzpAwh0Q5AMwCwgmA+K0/IyAYAdCYEAeENJjirA/l27FJEdFE59+2fszZzLpAgnNAzIUag2hACD3XYjd/l/8chOrL4+XoALTy2bSbukDEmod1o5J7RET1iT27icozwgPgirOjSwSqCfc+yENjAqxPrPv3YUGEAnDceHNhIasfTvFtujRmZNWm1Q83QbkHAnDUKp6kXGgBwnnQgSN9j6A3s6F8X+6MdPvVBnDc+ClvIbbis7qfitwbqDyt/nGrA0ELQLpZeIcgJrnEPgRUn1S6V6oCKgNIN4stBCipdhxnOwJoTyqdsooMSgAyjcJHQMyrdJiYNkS3TrX7WiaPFIBxyxM5gJiRCRrkfxVP2Asg3SjUEfEyyOB73yFyGGJtWum0Rbt5LFFDgF+iHouI3k+qXd95yxfAfLa3PkYtEO/vwXJPvcJaU2MyYq/9VgdPAGKdZ3RnYqmTWSTTLPYA4Cxa8DSeWXjqFSd4Asg0ip9MBTn7rMGVTjeL1yY+BSDoOdXOq22wOwCOm8WSBdCK1gJfe3MZvPrytsOt7Pk8/614blvwycT4DKC8mncWA2wCaOWzGZb6bML1lwrFCYDnGhxr9mJ9A7UBwJj7rZkzXgAABPDrpNK5Xor0FcABrM8HjRvAthesAKSbhRoCvjPx7a33GT8A7gV0Nal061yuFYBMs/jZYCZnxSAJAABg5FQ6L1YAeA7vG2bfmbZ+Mj6BuZbLYEx4gLGQ14NoQjwAlgGZAJBpFO5CZ28V3ScpAIBo4FS7p8g3Ihl29Jei/KGbJQYAADjW/XdoagPiRypJAHhYjocIfpK2DC7l4UERphuFW0T8IbRvK3aQJA8gghsMtP2cZ3ECHVM9WG5t3xHXYkkWQYr2w88e9bJLfQ5APQDimRygkm7qWVuREC+IiJbgWgkE0YADINXx/DI5qu8fqp3OxK4MgH8vk2rnP5EWF7FNszAAwJcy6OoA1jYQsk6T8H+6UWwjwoVMFg0Am/toWcdx/68OoFEcAcL3UoF9cmrS92JqoDa501BrGZQlNGPSdWdYjeCurx0IEcB1FIUJJmDxdP4zRpeqB7giENKgtS3zoqhJT5UH272SBkKurZ+ZwkUBloY4IhTWWTM1+vZtmqRQWGyGHv12WCdo+H95AA2dSjf3lBLjVn30SVHxGagGRCG/g2RMgnP356o8HYysDMqTo25qpLSPDuEFsXsAkePYs5PlAenT4eiGMQ/gBbF6wJb1N+aAJYjHXSCxoBAoUao4L8ToAX2n0tmpbfYvknJpYGJClAEwsjchcmY25pSLpLgxjQgCALKcQojdqa8PapfJLXsycWosS65GfVArK8uTl8oqJhcVpwDRzM8iUVepyGB7rgJeipg4PuOZJYbY+/Lzh/7z39+c2YzVoizIVlFeGQBvqJpl1fEEU21VldcCMIdgqHg6QhKyb357KOkcsP2CWB0A2yaWyFAcAp5bagPgQs6LqYGXukdc1BwYQX9mQekgl6bWRRRhM1E9Nm/YvncQgF8gD9jeQInLDkR8Fjdy82NHLyKHUFycrMd6cXIXRKqEhDWlo7YA1gKgobgGY83aYRVfDh/eAzwUEZenXauE4mKl/Ih6PwsaEkHPtVk72Zen/bTg1+fdZ+eIVg4ITlBcnafsLhgaAuCY+BV6hBERG0ztf3pRWdpPvH8BTyo4jDBmzNgAAAAASUVORK5CYII="/></a>
 </div>
-{% endblock %}
+{% endblock content %}
 {% block footer %}
 {{ block.super }}
-{{ text }}
-{% endblock %}
+{% endblock footer %}
+{% block js %}
+<script src="{% static 'pages/js/page_list.js' %}"></script>
+{% endblock js %}

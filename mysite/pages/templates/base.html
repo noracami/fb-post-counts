@@ -1,4 +1,5 @@
 {# stores/templates/base.html #}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,7 +10,7 @@
 
     <body style="padding-top: 70px;">
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container-fluid">
+            <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{% url 'home' %}">Facebook Page Counts</a>
                 </div>
@@ -17,13 +18,22 @@
                 <div>
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="{% url 'page_list' %}">FB 粉絲專頁</a></li>
-                        <li class="disabled"><a href="">熱門 FB 動態</a></li>
-                        <li class="disabled"><a href="">熱門新聞</a></li>
+                        <li class="disabled"><a href="javascript://">熱門 FB 動態</a></li>
+                        <li class="disabled"><a href="javascript://">熱門新聞</a></li>
                     </ul>
+                    <form class="navbar-right navbar-form" method="post" action="{% url 'logout' %}">
+                        {% if user.is_authenticated %}
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'home' %}">
+                        <button class="btn btn-default" type="submit">登出</button>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-default">登入</a>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid" style="width: 1150px;margin-right: auto; margin-left: auto;">
+        <div class="container-fluid" style="width: {% block content_width %}1150{% endblock %}px;margin-right: auto; margin-left: auto;">
         {% block content %}
         {% endblock %}
         </div>
@@ -31,7 +41,10 @@
         {% block footer %}
         <hr>
         <h2 class="text-center">Footer</h2>
-        {% endblock %}
+        {% endblock footer %}
         </div>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="{% static 'base/js/base.js' %}"></script>
+        {% block js %}{% endblock js %}
     </body>
 </html>
